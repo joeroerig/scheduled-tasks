@@ -1,38 +1,47 @@
-# To run and test the code you need to update 4 places:
-# 1. Change MY_EMAIL/MY_PASSWORD to your own details.
-# 2. Go to your email provider and make it allow less secure apps.
-# 3. Update the SMTP ADDRESS to match your email provider.
-# 4. Update birthdays.csv to contain today's month and day.
-# See the solution video in the 100 Days of Python Course for explainations.
-
-
-from datetime import datetime
-import pandas
-import random
-import smtplib
+import requests
 import os
+from dotenv import load_dotenv
+from twilio.rest import Client
 
-# import os and use it to get the Github repository secrets
-MY_EMAIL = os.environ.get("MY_EMAIL")
-MY_PASSWORD = os.environ.get("MY_PASSWORD")
+load_dotenv()
+#KAD3ANSAA89DU7W4PREFDTL7
+# $env:OWM_API_KEY = "133cddc69b4238b476aff37a8625aa2d"
 
-today = datetime.now()
-today_tuple = (today.month, today.day)
+# From Open Weather Map
+api_key = os.environ.get("OWM_API_KEY")
 
-data = pandas.read_csv("birthdays.csv")
-birthdays_dict = {(data_row["month"], data_row["day"])                  : data_row for (index, data_row) in data.iterrows()}
-if today_tuple in birthdays_dict:
-    birthday_person = birthdays_dict[today_tuple]
-    file_path = f"letter_templates/letter_{random.randint(1, 3)}.txt"
-    with open(file_path) as letter_file:
-        contents = letter_file.read()
-        contents = contents.replace("[NAME]", birthday_person["name"])
+OWM_Endpoint = "https://api.openweathermap.org/data/2.5/forecast"
+account_sid = "AC2fd327e74faa77e1be2199eefd56f96b"
+auth_token = "3935f908f7e91f1d7716beda56a698e0"
+#From Twilio
+PHONE = "+18666217128"
+TWILIO_WHATSAPP_FROM_NUMBER = "whatsapp:+14155238886"
+TWILIO_WHATSAPP_TO_NUMBER = "whatsapp:+16126008645"
 
-    with smtplib.SMTP("YOUR EMAIL PROVIDER SMTP SERVER ADDRESS") as connection:
-        connection.starttls()
-        connection.login(MY_EMAIL, MY_PASSWORD)
-        connection.sendmail(
-            from_addr=MY_EMAIL,
-            to_addrs=birthday_person["email"],
-            msg=f"Subject:Happy Birthday!\n\n{contents}"
-        )
+weather_params = {
+    "lon" : -93.5268986,
+    "lat" : 44.7980186,
+    "appid" : api_key,
+    "cnt" : 4,
+}
+
+response = requests.get(url=OWM_Endpoint, params=weather_params)
+response.raise_for_status()
+weather_data = response.json()
+
+will_rain = False
+for forecast in weather_data["list"]:
+     if int(forecast['weather'][0]['id']) < 1700:
+         will_rain = True
+
+if will_rain:
+    client = Client(account_sid, auth_token)
+
+    message = client.messages.create(
+        from_=TWILIO_WHATSAPP_FROM_NUMBER,
+        body="Bring an Umbrella fella. ☂️ ",
+        to=TWILIO_WHATSAPP_TO_NUMBER
+    )
+
+    print(message.status)
+
