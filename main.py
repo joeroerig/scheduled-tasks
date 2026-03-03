@@ -4,8 +4,6 @@ from dotenv import load_dotenv
 from twilio.rest import Client
 
 load_dotenv()
-#KAD3ANSAA89DU7W4PREFDTL7
-# $env:OWM_API_KEY = "133cddc69b4238b476aff37a8625aa2d"
 
 # From Open Weather Map
 api_key = os.environ.get("OWM_API_KEY")
