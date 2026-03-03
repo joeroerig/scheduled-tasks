@@ -39,8 +39,9 @@ jobs:
 
       - name: Run script
         env:
-          # Your secrets are available as environment variables
-          # Add more secrets in Settings > Secrets > Actions
-          MY_EMAIL: ${{ secrets.MY_EMAIL }}
-          MY_PASSWORD: ${{ secrets.MY_PASSWORD }}
+          OWM_API_KEY: ${{ secrets.OWM_API_KEY }}
+          ACCOUNT_SID: ${{ secrets.ACCOUNT_SID }}
+          AUTH_TOKEN: ${{ secrets.AUTH_TOKEN }}
+          TWILIO_WHATSAPP_FROM_NUMBER: ${{ secrets.TWILIO_WHATSAPP_FROM_NUMBER }}
+          TWILIO_WHATSAPP_TO_NUMBER: ${{ secrets.TWILIO_WHATSAPP_TO_NUMBER }}
         run: python main.py
