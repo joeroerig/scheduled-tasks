@@ -9,14 +9,14 @@ load_dotenv()
 
 # From Open Weather Map
 api_key = os.environ.get("OWM_API_KEY")
-
 OWM_Endpoint = "https://api.openweathermap.org/data/2.5/forecast"
-account_sid = "AC2fd327e74faa77e1be2199eefd56f96b"
-auth_token = "3935f908f7e91f1d7716beda56a698e0"
+account_sid = os.environ.get("ACCOUNT_SID")
+auth_token = os.environ.get("AUTH_TOKEN")
+
 #From Twilio
-PHONE = "+18666217128"
-TWILIO_WHATSAPP_FROM_NUMBER = "whatsapp:+14155238886"
-TWILIO_WHATSAPP_TO_NUMBER = "whatsapp:+16126008645"
+from_number = os.environ.get("TWILIO_WHATSAPP_FROM_NUMBER")
+to_number = os.environ.get("TWILIO_WHATSAPP_TO_NUMBER")
+
 
 weather_params = {
     "lon" : -93.5268986,
@@ -38,9 +38,9 @@ if will_rain:
     client = Client(account_sid, auth_token)
 
     message = client.messages.create(
-        from_=TWILIO_WHATSAPP_FROM_NUMBER,
+        from_=from_number,
         body="Bring an Umbrella fella. ☂️ ",
-        to=TWILIO_WHATSAPP_TO_NUMBER
+        to=to_number
     )
 
     print(message.status)
