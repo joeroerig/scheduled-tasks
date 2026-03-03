@@ -8,7 +8,7 @@ OWM_Endpoint = "https://api.openweathermap.org/data/2.5/forecast"
 weather_params = {
     "lon" : -93.5268986,
     "lat" : 44.7980186,
-    "appid" : api_key,
+    "appid" : OWM_API_KEY,
     "cnt" : 4,
 }
 
